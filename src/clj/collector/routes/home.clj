@@ -1,6 +1,6 @@
 (ns collector.routes.home
   (:require [collector.layout :as layout]
-            [compojure.core :refer [defroutes GET]]
+            [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
             [collector.db.core :as db]))
 
@@ -9,11 +9,16 @@
     "home.html" 
     {:messages (db/get-messages)}))
 
+(defn save-message! [{:keys [params]}]
+  (db/save-message!
+   (assoc params :timestamp (java.util.Date.)))
+  (response/found "/"))
+
 (defn about-page []
   (layout/render "about.html"))
 
 (defroutes home-routes
   (GET "/" [] (home-page))
-  ; (POST "/message" request (save-message! request))
+  (POST "/message" request (save-message! request))
   (GET "/about" [] (about-page)))
 
