@@ -1,1 +1,2 @@
-{:prod true}
+{:port 3000
+ :prod true}
